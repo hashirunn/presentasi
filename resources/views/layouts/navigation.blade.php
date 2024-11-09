@@ -15,6 +15,21 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @hasrole('mahasiswa')
+                        <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.index')">
+                            {{ __('List Buku') }}
+                        </x-nav-link>
+                    @endhasrole
+
+                    @hasrole('pustakawan')
+                        <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.index')">
+                            {{ __('List Buku') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.index')">
+                            {{ __('List User') }}
+                        </x-nav-link>
+                    @endhasrole
                 </div>
             </div>
 
