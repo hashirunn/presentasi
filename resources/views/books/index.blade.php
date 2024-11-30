@@ -13,6 +13,7 @@
                     <x-primary-button tag="a" href="{{ route('book.create') }}">Tambah Data Buku</x-primary-button>
                     <x-primary-button tag="a" href="{{ route('book.print') }}">Print Data Buku</x-primary-button>
                     <x-primary-button tag="a" href="{{ route('book.export') }}">Export Data Buku</x-primary-button>
+                    <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-book')" >Import Data Buku</x-primary-button>
                     
                     <x-table>
                         <x-slot name="header">
@@ -68,6 +69,23 @@
                                 <x-danger-button class="ml-3">
                                     {{ __('Delete!!!') }}
                                 </x-danger-button>
+                            </div>
+                        </form>
+                    </x-modal>
+
+                    <x-modal name="import-book" focusable maxWidth="xl">
+                        <form method="post" enctype="multipart/form-data" action="{{route('book.import')}}" class="p-6">
+
+                            @method('post')
+                            @csrf
+                            <x-file-input id="file" name="file" accept=".xlsx, .xls" class="mt-1 block w-full" />
+                            <div class="mt-6 flex justify-end">
+                                <x-secondary-button x-on:click="$dispatch('close')">
+                                    {{ __('Cancel') }}
+                                </x-secondary-button>
+                                <x-primary-button class="ml-3">
+                                    {{ __('Import') }}
+                                </x-primary-button>
                             </div>
                         </form>
                     </x-modal>

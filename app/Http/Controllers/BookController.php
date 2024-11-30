@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\Booksimport;
 use App\Exports\BooksExport;
 use App\Models\Book;
 use App\Models\Bookshelf;
@@ -79,12 +80,12 @@ class BookController extends Controller
         }
         $book->update($validate);
         if($book){
-            $notification[] = array(
+            $notification = array(
                 'message' => 'data buku berhasil disimpan',
                 'alert-type' => 'success'
             );
         }else{
-            $notification[] = array(
+            $notification = array(
                 'message' => 'data buku gagal disimpan',
                 'alert-type' => 'error'
             );
@@ -105,10 +106,20 @@ class BookController extends Controller
     public function print(){
         $data['books'] = Book::with('bookshelf')->get();
         $pdf = Pdf::loadView('books.print', $data);
-        return $pdf->stream('ListBuku.pdf');
+        return $pdf->download('ListBuku.pdf');
     }
 
     public function export(){
         return Excel::download(new BooksExport, 'DataBuku.xlsx');
+    }
+
+    public function import(Request $request){
+        $request->validate(['file' => 'required|mimes:xlsx, xls']);
+        Excel::import(new BooksImport, $request->file('file'));
+        $notification = array(
+            'message' => 'data buku berhasil disimpan',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('book')->with($notification);
     }
 }
