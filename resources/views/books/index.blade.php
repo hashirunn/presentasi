@@ -9,12 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-
+                    @hasrole('pustakawan')
                     <x-primary-button tag="a" href="{{ route('book.create') }}">Tambah Data Buku</x-primary-button>
                     <x-primary-button tag="a" href="{{ route('book.print') }}">Print Data Buku</x-primary-button>
                     <x-primary-button tag="a" href="{{ route('book.export') }}">Export Data Buku</x-primary-button>
                     <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-book')" >Import Data Buku</x-primary-button>
-                    
+                    @endhasrole
                     <x-table>
                         <x-slot name="header">
                             <tr class="py-10">
@@ -26,12 +26,14 @@
                                 <th scope="col">Kota</th>
                                 <th scope="col">Cover</th>
                                 <th scope="col">Kode Rak</th>
+                                @hasrole('pustakawan')
                                 <th scope="col">Aksi</th>
+                                @endhasrole
                             </tr>
                         </x-slot>
                         @foreach ($books as $book)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ ($books->currentPage()-1) * $books->perPage() + $loop->iteration }}</td>
                                 <td>{{ $book->title }}</td>
                                 <td>{{ $book->author }}</td>
                                 <td>{{ $book->year }}</td>
@@ -41,6 +43,7 @@
                                     <img src="{{ asset('storage/cover_buku/' . $book->cover) }}" width="100px" />
                                 </td>
                                 <td>{{ $book->bookshelf->code }}-{{ $book->bookshelf->name }}</td>
+                                @hasrole('pustakawan')
                                 <td>
                                     <x-primary-button tag="a"
                                         href="{{ route('book.edit', $book->id) }}">Edit</x-primary-button>
@@ -48,10 +51,12 @@
                                         x-on:click.prevent="$dispatch('open-modal', 'confirm-book-deletion')"
                                         x-on:click="$dispatch('set-action', '{{ route('book.destroy', $book->id) }}')">{{ __('Delete') }}</x-danger-button>
                                 </td>
+                                @endhasrole
                             </tr>
                         @endforeach
                     </x-table>
-
+                    
+                    
                     <x-modal name="confirm-book-deletion" focusable maxWidth="xl">
                         <form method="post" x-bind:action="action" class="p-6">
                             @method('delete')
@@ -72,7 +77,7 @@
                             </div>
                         </form>
                     </x-modal>
-
+                    
                     <x-modal name="import-book" focusable maxWidth="xl">
                         <form method="post" enctype="multipart/form-data" action="{{route('book.import')}}" class="p-6">
 
@@ -89,9 +94,10 @@
                             </div>
                         </form>
                     </x-modal>
-
+                    
                 </div>
             </div>
         </div>
+        {{ $books->links() }}
     </div>
 </x-app-layout>

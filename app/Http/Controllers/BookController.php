@@ -9,12 +9,13 @@ use App\Models\Bookshelf;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BookController extends Controller
 {
-    public function index(){
-        $data['books'] = Book::all();
+    public function index():View{
+        $data['books'] = Book::paginate(10);
         return view('books.index', $data);
     }
     public function create(){

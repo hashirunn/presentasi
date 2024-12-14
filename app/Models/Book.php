@@ -27,7 +27,7 @@ class Book extends Model
             $books_filter[$key]['no'] = $key+1;
             $books_filter[$key]['title'] = $book['title'];
             $books_filter[$key]['author'] = $book['author'];
-            $books_filter[$key]['year'] = $book['year'];
+            $books_filter[$key]['year'] = $book['year'];    
             $books_filter[$key]['publisher'] = $book['publisher'];
         }
         return $books_filter;
